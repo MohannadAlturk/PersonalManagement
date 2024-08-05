@@ -1,12 +1,10 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class DeleteEmployee {
@@ -39,28 +37,20 @@ public class DeleteEmployee {
             deleteMitarbeiter(mitarbeiterIdInput.getText());
         });
 
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setWidth(screenBounds.getWidth() * 0.9);
-        primaryStage.setHeight(screenBounds.getHeight() * 0.9);
-
-        primaryStage.setMaxWidth(screenBounds.getWidth());
-        primaryStage.setMaxHeight(screenBounds.getHeight());
-
-        primaryStage.centerOnScreen();
         primaryStage.setScene(formScene);
+        primaryStage.show();
     }
 
     private void deleteMitarbeiter(String mitarbeiterID){
-        System.out.println("Test1");
         EmployeeForm.refreshMitarbeiterList();
+        Mitarbeiter toDeleteEmployee = null;
         for (Mitarbeiter mitarbeiter : EmployeeForm.mitarbeiterList){
-            System.out.println("Test2");
             if (mitarbeiter.getId().equals(mitarbeiterID)){
-                System.out.println(mitarbeiterID);
-                EmployeeForm.mitarbeiterList.remove(mitarbeiter);
+                toDeleteEmployee = mitarbeiter;
                 mitarbeiter = null;
             }
         }
+        EmployeeForm.mitarbeiterList.remove(toDeleteEmployee);
         EmployeeForm.refreshMitarbeiterJSON();
     }
 }
