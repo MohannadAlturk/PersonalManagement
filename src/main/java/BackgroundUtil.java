@@ -3,10 +3,11 @@ import javafx.scene.layout.*;
 
 public class BackgroundUtil {
     public static void setBackground(Pane pane) {
-        Image backgroundImage = new Image("file:src/main/java/hintergrund1.png");
+        Image backgroundImage = new Image("file:src/main/resources/backgroundImage.png");
+        BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true);
         BackgroundImage background = new BackgroundImage(backgroundImage,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+                BackgroundPosition.CENTER, backgroundSize);
         pane.setBackground(new Background(background));
     }
 }

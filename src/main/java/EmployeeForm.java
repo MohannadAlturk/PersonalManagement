@@ -3,7 +3,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -11,9 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,9 +36,8 @@ public class EmployeeForm {
 
         Label headerLabel = new Label("Neuer Mitarbeiterformular");
         headerLabel.setStyle("-fx-font-size: 60px; -fx-font-weight: bold;");
-        GridPane.setConstraints(headerLabel, 0, 0, 2, 1); // Spanning 2 columns
+        GridPane.setConstraints(headerLabel, 0, 0, 2, 1);
 
-        // Erstellen Sie die Labels und Textfelder
         Label firstnameLabel = new Label("Vorname:");
         GridPane.setConstraints(firstnameLabel, 0, 1);
         TextField firstnameInput = new TextField();
@@ -82,7 +78,6 @@ public class EmployeeForm {
         Button backButton = new Button("Zurück");
         GridPane.setConstraints(backButton, 1, 9);
 
-        // Fügen Sie die Steuerelemente zum GridPane hinzu
         grid.getChildren().addAll(headerLabel,firstnameLabel, firstnameInput,
                 lastnameLabel, lastnameInput, dobLabel, dobInput,
                 marriedLabel, marriedInput,emailLabel, emailInput, telefonnummerLabel,
@@ -93,7 +88,6 @@ public class EmployeeForm {
             mainApp.start(primaryStage);
         });
 
-        // Fügen Sie eine Aktion für den Button hinzu
         submitButton.setOnAction(e -> {
             String firstname = firstnameInput.getText();
             String lastname = lastnameInput.getText();
@@ -122,31 +116,18 @@ public class EmployeeForm {
         });
 
         BackgroundUtil.setBackground(grid);
-
-        // Erstellen Sie die Scene für das Eingabeformular und fügen Sie das Layout hinzu
         Scene formScene = new Scene(grid);
-
-        // Holen Sie sich die Bildschirmgröße
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-        // Setzen Sie die Fenstergröße auf die Bildschirmgröße
-        // Setzen Sie die Fenstergröße auf die Bildschirmgröße
-        primaryStage.setWidth(screenBounds.getWidth() * 0.9); // 90% der Bildschirmbreite
-        primaryStage.setHeight(screenBounds.getHeight() * 0.9); // 90% der Bildschirmhöhe
-
-        // Stellen Sie sicher, dass das Fenster nicht die Bildschirmgröße überschreitet
-        primaryStage.setMaxWidth(screenBounds.getWidth());
-        primaryStage.setMaxHeight(screenBounds.getHeight());
-
-        primaryStage.centerOnScreen(); // Hier die Zentrierung hinzufügen
-
+        try {
+            formScene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        } catch (NullPointerException e) {
+            System.out.println("CSS-Datei konnte nicht geladen werden: " + e.getMessage());
+        }
         primaryStage.setScene(formScene);
-
     }
 
     public static void refreshMitarbeiterList(){
         ObjectMapper objectMapper = new ObjectMapper();
-        File file = new File("target/mitarbeiter.json");
+        File file = new File("src/main/resources/mitarbeiter.json");
         if (file.exists()) {
             try {
                 mitarbeiterList = objectMapper.readValue(file, new TypeReference<List<Mitarbeiter>>(){});
@@ -158,7 +139,7 @@ public class EmployeeForm {
 
     public static void refreshMitarbeiterJSON(){
         ObjectMapper objectMapper = new ObjectMapper();
-        File file = new File("target/mitarbeiter.json");
+        File file = new File("src/main/resources/mitarbeiter.json");
         try {
             objectMapper.writeValue(file, mitarbeiterList);
         } catch (IOException ex) {

@@ -1,28 +1,23 @@
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.control.TextField;
-
 
 public class EmployeeOverview {
     public void showOverview(Stage primaryStage) {
+        VBox mainVBox = new VBox();
         ScrollPane scrollPane = new ScrollPane();
         VBox vbox = new VBox(10);
-        BackgroundUtil.setBackground(vbox);
-        vbox.setAlignment(Pos.CENTER); // Zentriere die VBox-Inhalte
+        BackgroundUtil.setBackground(mainVBox);
+        vbox.setAlignment(Pos.CENTER);
         scrollPane.setContent(vbox);
+
         scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
         EmployeeForm.refreshMitarbeiterList();
-
         for (Mitarbeiter mitarbeiter : EmployeeForm.mitarbeiterList) {
             GridPane gridPane = new GridPane();
             gridPane.setHgap(10);
@@ -57,27 +52,25 @@ public class EmployeeOverview {
             String verheiratetText = mitarbeiter.getVerheiratet() ? "Ja" : "Nein";
             gridPane.add(new Label(verheiratetText), 1, 7);
 
-            vbox.getChildren().add(gridPane); // Füge das GridPane zur VBox hinzu
+            vbox.getChildren().add(gridPane);
             vbox.getChildren().add(new Separator());
         }
 
-        // Zurück-Button
         Button backButton = new Button("Zurück");
         backButton.setOnAction(e -> {
             Main mainApp = new Main();
             mainApp.start(primaryStage);
         });
-        vbox.getChildren().add(backButton); // Füge den Button zur VBox hinzu
+        vbox.getChildren().add(backButton);
 
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-        primaryStage.setWidth(screenBounds.getWidth() * 0.9);
-        primaryStage.setHeight(screenBounds.getHeight() * 0.9);
-        primaryStage.setMaxWidth(screenBounds.getWidth());
-        primaryStage.setMaxHeight(screenBounds.getHeight());
-        primaryStage.centerOnScreen();
-
-        primaryStage.setScene(new Scene(scrollPane, 400, 300));
+        mainVBox.getChildren().add(scrollPane);
+        Scene scene = new Scene(mainVBox, 400, 300);
+        try {
+            scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        } catch (NullPointerException e) {
+            System.out.println("CSS-Datei konnte nicht geladen werden: " + e.getMessage());
+        }
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 }

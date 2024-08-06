@@ -27,6 +27,11 @@ public class DeleteEmployee {
         grid.getChildren().addAll(mitarbeiterIdLabel , mitarbeiterIdInput, submitButton, backButton);
         BackgroundUtil.setBackground(grid);
         Scene formScene = new Scene(grid);
+        try {
+            formScene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        } catch (NullPointerException e) {
+            System.out.println("CSS-Datei konnte nicht geladen werden: " + e.getMessage());
+        }
 
         backButton.setOnAction(e -> {
             Main mainApp = new Main();
@@ -35,6 +40,7 @@ public class DeleteEmployee {
 
         submitButton.setOnAction(e -> {
             deleteMitarbeiter(mitarbeiterIdInput.getText());
+            mitarbeiterIdInput.clear();
         });
 
         primaryStage.setScene(formScene);

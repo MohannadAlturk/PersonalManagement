@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class Main extends Application {
@@ -29,9 +28,14 @@ public class Main extends Application {
         Button employeeOverviewButton = new Button("Mitarbeiter anzeigen");
         Button closeButton = new Button("Fenster schließen");
 
-        startLayout.getChildren().addAll(addEmployeeButton, deleteEmployeeButton, employeeOverviewButton,closeButton);
+        startLayout.getChildren().addAll(addEmployeeButton, employeeOverviewButton, deleteEmployeeButton, closeButton);
 
         Scene startScene = new Scene(startLayout, 300, 200);
+        try {
+            startScene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        } catch (NullPointerException e) {
+            System.out.println("CSS-Datei konnte nicht geladen werden: " + e.getMessage());
+        }
         BackgroundUtil.setBackground(startLayout);
         WindowUtil.setWindowSize(primaryStage);
         primaryStage.setTitle("Personal Management Tool");
