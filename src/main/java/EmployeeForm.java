@@ -4,20 +4,29 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeeForm {
 
+    private final TextField firstnameInput = new TextField();
+    private final TextField lastnameInput = new TextField();
+    private final TextField dobInput = new TextField();
+    protected CheckBox marriedInput = new CheckBox();
+    private final TextField emailInput = new TextField();
+    private final TextField telefonnummerInput = new TextField();
+    private final TextField positionInput = new TextField();
+
+    protected String errorStyle = "-fx-border-color: red; -fx-border-width: 1px;";
     protected static List<Mitarbeiter> mitarbeiterList = new ArrayList<>();
     protected void showEmployeeForm(Stage primaryStage) {
         GridPane grid = new GridPane();
@@ -40,48 +49,41 @@ public class EmployeeForm {
 
         Label firstnameLabel = new Label("Vorname:");
         GridPane.setConstraints(firstnameLabel, 0, 1);
-        TextField firstnameInput = new TextField();
-        GridPane.setConstraints(firstnameInput, 1, 1);
+        GridPane.setConstraints(this.firstnameInput, 1, 1);
 
         Label lastnameLabel = new Label("Nachname:");
         GridPane.setConstraints(lastnameLabel, 0, 2);
-        TextField lastnameInput = new TextField();
-        GridPane.setConstraints(lastnameInput, 1, 2);
+        GridPane.setConstraints(this.lastnameInput, 1, 2);
 
         Label dobLabel = new Label("Geburtsdatum:");
         GridPane.setConstraints(dobLabel, 0, 3);
-        TextField dobInput = new TextField();
-        GridPane.setConstraints(dobInput, 1, 3);
+        GridPane.setConstraints(this.dobInput, 1, 3);
 
         Label marriedLabel = new Label("Verheiratet:");
         GridPane.setConstraints(marriedLabel, 0, 4);
-        CheckBox marriedInput = new CheckBox();
         GridPane.setConstraints(marriedInput, 1, 4);
 
         Label emailLabel = new Label("Email:");
         GridPane.setConstraints(emailLabel, 0, 5);
-        TextField emailInput = new TextField();
-        GridPane.setConstraints(emailInput, 1, 5);
+        GridPane.setConstraints(this.emailInput, 1, 5);
 
         Label telefonnummerLabel = new Label("Telefonnummer:");
         GridPane.setConstraints(telefonnummerLabel, 0, 6);
-        TextField telefonnummerInput = new TextField();
-        GridPane.setConstraints(telefonnummerInput, 1, 6);
+        GridPane.setConstraints(this.telefonnummerInput, 1, 6);
 
         Label positionLabel = new Label("Position:");
         GridPane.setConstraints(positionLabel, 0, 7);
-        TextField positionInput = new TextField();
-        GridPane.setConstraints(positionInput, 1, 7);
+        GridPane.setConstraints(this.positionInput, 1, 7);
 
         Button submitButton = new Button("Daten speichern");
         GridPane.setConstraints(submitButton, 1, 8);
         Button backButton = new Button("Zurück");
         GridPane.setConstraints(backButton, 1, 9);
 
-        grid.getChildren().addAll(headerLabel,firstnameLabel, firstnameInput,
-                lastnameLabel, lastnameInput, dobLabel, dobInput,
-                marriedLabel, marriedInput,emailLabel, emailInput, telefonnummerLabel,
-                telefonnummerInput, positionLabel, positionInput, submitButton, backButton);
+        grid.getChildren().addAll(headerLabel,firstnameLabel, this.firstnameInput,
+                lastnameLabel, this.lastnameInput, dobLabel, this.dobInput,
+                marriedLabel, this.marriedInput,emailLabel, this.emailInput, telefonnummerLabel,
+                this.telefonnummerInput, positionLabel, this.positionInput, submitButton, backButton);
 
         backButton.setOnAction(e -> {
             Main mainApp = new Main();
@@ -89,30 +91,39 @@ public class EmployeeForm {
         });
 
         submitButton.setOnAction(e -> {
-            String firstname = firstnameInput.getText();
-            String lastname = lastnameInput.getText();
-            String dob = dobInput.getText();
-            boolean married = marriedInput.isSelected();
-            String email = emailInput.getText();
-            String telefonnummer = telefonnummerInput.getText();
-            String position = positionInput.getText();
+            Map<String, Object> employeeInfo = new HashMap<>();
+            employeeInfo.put("firstname", firstnameInput.getText());
+            employeeInfo.put("lastname", lastnameInput.getText());
+            employeeInfo.put("dob", dobInput.getText());
+            employeeInfo.put("married", marriedInput.isSelected());
+            employeeInfo.put("email", emailInput.getText());
+            employeeInfo.put("telefonnummer", telefonnummerInput.getText());
+            employeeInfo.put("position", positionInput.getText());
 
-            refreshMitarbeiterList();
+            boolean noInputError = noInputCheck(employeeInfo);
+            if (!noInputError) {
+                refreshMitarbeiterList();
+                Mitarbeiter mitarbeiter = new Mitarbeiter(
+                        (String) employeeInfo.get("firstname"),
+                        (String) employeeInfo.get("lastname"),
+                        (String) employeeInfo.get("dob"),
+                        (Boolean) employeeInfo.get("married"),
+                        (String) employeeInfo.get("email"),
+                        (String) employeeInfo.get("telefonnummer"),
+                        (String) employeeInfo.get("position")
+                );
+                mitarbeiterList.add(mitarbeiter);
 
-            Mitarbeiter mitarbeiter = new Mitarbeiter(firstname, lastname, dob,
-                    married, email, telefonnummer, position);
+                refreshMitarbeiterJSON();
 
-            mitarbeiterList.add(mitarbeiter);
-
-            refreshMitarbeiterJSON();
-
-            firstnameInput.clear();
-            lastnameInput.clear();
-            dobInput.clear();
-            marriedInput.setSelected(false);
-            emailInput.clear();
-            telefonnummerInput.clear();
-            positionInput.clear();
+                firstnameInput.clear();
+                lastnameInput.clear();
+                dobInput.clear();
+                marriedInput.setSelected(false);
+                emailInput.clear();
+                telefonnummerInput.clear();
+                positionInput.clear();
+            }
         });
 
         BackgroundUtil.setBackground(grid);
@@ -145,5 +156,33 @@ public class EmployeeForm {
         } catch (IOException ex) {
             throw new RuntimeException("Fehler beim Speichern der JSON-Datei: " + ex.getMessage());
         }
+    }
+
+    private boolean noInputCheck(Map<String, Object> map){
+        boolean noInput = false;
+
+        Map<String, TextInputControl> inputFields = Map.of(
+                "firstname", firstnameInput,
+                "lastname", lastnameInput,
+                "dob", dobInput,
+                "email", emailInput,
+                "telefonnummer", telefonnummerInput,
+                "position", positionInput
+        );
+
+        inputFields.values().forEach(field -> field.setStyle(""));
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof String && ((String) value).isEmpty()) {
+                TextInputControl inputField = inputFields.get(key);
+                if (inputField != null) {
+                    inputField.setStyle(errorStyle);
+                    noInput = true;
+                }
+            }
+        }
+        return noInput;
     }
 }
