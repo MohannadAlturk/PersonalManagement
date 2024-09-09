@@ -24,11 +24,13 @@ public class Main extends Application {
         startLayout.setPadding(new Insets(20));
 
         Button addEmployeeButton = new Button("Neue Mitarbeiter hinzufügen");
+        Button updateEmployeeButton = new Button("Mitarbeiter ändern");
         Button deleteEmployeeButton = new Button("Mitarbeiter entfernen");
         Button employeeOverviewButton = new Button("Mitarbeiter anzeigen");
         Button closeButton = new Button("Fenster schließen");
 
-        startLayout.getChildren().addAll(addEmployeeButton, employeeOverviewButton, deleteEmployeeButton, closeButton);
+        startLayout.getChildren().addAll(addEmployeeButton, employeeOverviewButton,
+                updateEmployeeButton, deleteEmployeeButton, closeButton);
 
         Scene startScene = new Scene(startLayout, 300, 200);
         try {
@@ -44,10 +46,12 @@ public class Main extends Application {
         EmployeeForm employeeForm = new EmployeeForm();
         DeleteEmployee deleteEmployee = new DeleteEmployee();
         EmployeeOverview employeeOverview = new EmployeeOverview();
+        UpdateEmployee updateEmployee = new UpdateEmployee();
 
         addEmployeeButton.setOnAction(e -> employeeForm.showEmployeeForm(primaryStage));
         deleteEmployeeButton.setOnAction(e -> deleteEmployee.showDeleteEmployee(primaryStage));
         employeeOverviewButton.setOnAction(e -> employeeOverview.showOverview(primaryStage));
+        updateEmployeeButton.setOnAction(e -> updateEmployee.showUpdateEmployee(primaryStage));
         closeButton.setOnAction(e -> primaryStage.close());
     }
 }
