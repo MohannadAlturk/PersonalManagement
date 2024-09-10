@@ -1,16 +1,15 @@
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class EmployeeOverview {
-    public void showOverview(Stage primaryStage) {
+    public void showOverview(BorderPane mainLayout) {
         VBox mainVBox = new VBox();
         ScrollPane scrollPane = new ScrollPane();
         VBox vbox = new VBox(10);
-        BackgroundUtil.setBackground(mainVBox);
+
         vbox.setAlignment(Pos.CENTER);
         scrollPane.setContent(vbox);
 
@@ -56,21 +55,8 @@ public class EmployeeOverview {
             vbox.getChildren().add(new Separator());
         }
 
-        Button backButton = new Button("Zurück");
-        backButton.setOnAction(e -> {
-            Main mainApp = new Main();
-            mainApp.start(primaryStage);
-        });
-        vbox.getChildren().add(backButton);
-
         mainVBox.getChildren().add(scrollPane);
-        Scene scene = new Scene(mainVBox, 400, 300);
-        try {
-            scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        } catch (NullPointerException e) {
-            System.out.println("CSS-Datei konnte nicht geladen werden: " + e.getMessage());
-        }
-        primaryStage.setScene(scene);
-        primaryStage.show();
+
+        mainLayout.setCenter(mainVBox);
     }
 }

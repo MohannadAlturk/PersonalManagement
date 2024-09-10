@@ -3,11 +3,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class EmployeeForm {
 
     protected String errorStyle = "-fx-border-color: red; -fx-border-width: 1px;";
     protected static List<Mitarbeiter> mitarbeiterList = new ArrayList<>();
-    protected void showEmployeeForm(Stage primaryStage) {
+    protected void showEmployeeForm(BorderPane mainLayout) {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(8);
@@ -76,18 +76,12 @@ public class EmployeeForm {
 
         Button submitButton = new Button("Daten speichern");
         GridPane.setConstraints(submitButton, 1, 8);
-        Button backButton = new Button("Zurück");
-        GridPane.setConstraints(backButton, 1, 9);
 
         grid.getChildren().addAll(headerLabel,firstnameLabel, this.firstnameInput,
                 lastnameLabel, this.lastnameInput, dobLabel, this.dobInput,
                 marriedLabel, this.marriedInput,emailLabel, this.emailInput, telefonnummerLabel,
-                this.telefonnummerInput, positionLabel, this.positionInput, submitButton, backButton);
+                this.telefonnummerInput, positionLabel, this.positionInput, submitButton);
 
-        backButton.setOnAction(e -> {
-            Main mainApp = new Main();
-            mainApp.start(primaryStage);
-        });
 
         submitButton.setOnAction(e -> {
             Map<String, Object> employeeInfo = new HashMap<>();
@@ -125,14 +119,7 @@ public class EmployeeForm {
             }
         });
 
-        BackgroundUtil.setBackground(grid);
-        Scene formScene = new Scene(grid);
-        try {
-            formScene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        } catch (NullPointerException e) {
-            System.out.println("CSS-Datei konnte nicht geladen werden: " + e.getMessage());
-        }
-        primaryStage.setScene(formScene);
+        mainLayout.setCenter(grid);
     }
 
     public static void refreshMitarbeiterList(){

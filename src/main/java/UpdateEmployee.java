@@ -1,18 +1,17 @@
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
 public class UpdateEmployee {
 
     private TextField IdInput, firstnameInput, lastnameInput, dobInput, emailInput, telefonnummerInput, positionInput;
     private CheckBox marriedInput;
 
-    public void showUpdateEmployee(Stage primaryStage) {
+    public void showUpdateEmployee(BorderPane mainLayout) {
         GridPane grid = createGridPane();
 
         Label headerLabel = new Label("Mitarbeiter ändern");
@@ -45,19 +44,14 @@ public class UpdateEmployee {
         Label positionLabel = createLabel("Position:", 8);
         Button searchButton = createButton("Suchen", 9);
         Button submitButton = createButton("Daten speichern", 10);
-        Button backButton = createButton("Zurück", 11);
 
-        setButtonActions(primaryStage, searchButton, submitButton, backButton);
-        BackgroundUtil.setBackground(grid);
+        setButtonActions(searchButton, submitButton);
+        mainLayout.setCenter(grid);
+
         grid.getChildren().addAll(headerLabel, IdLabel, IdInput, firstnameLabel, firstnameInput,
                 lastnameLabel, lastnameInput, dobLabel, dobInput, marriedLabel, marriedInput,
                 emailLabel, emailInput, telefonnummerLabel, telefonnummerInput,
-                positionLabel, positionInput, searchButton, submitButton, backButton);
-
-        Scene scene = new Scene(grid);
-        applyStylesheet(scene);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+                positionLabel, positionInput, searchButton, submitButton);
     }
 
     private GridPane createGridPane() {
@@ -94,19 +88,20 @@ public class UpdateEmployee {
         return button;
     }
 
-    private void setButtonActions(Stage primaryStage, Button searchButton, Button submitButton, Button backButton) {
+    private void setButtonActions(Button searchButton, Button submitButton) {
         submitButton.setOnAction(e -> saveEmployeeData());
-
         searchButton.setOnAction(e -> searchEmployeeData());
-
-        backButton.setOnAction(e -> {
-            Main mainApp = new Main();
-            mainApp.start(primaryStage);
-        });
     }
 
     private void saveEmployeeData() {
         String employeeID = IdInput.getText();
+        if (employeeID.isEmpty() || firstnameInput.getText().isEmpty() || lastnameInput.getText().isEmpty() ||
+                dobInput.getText().isEmpty() || emailInput.getText().isEmpty() || telefonnummerInput.getText().isEmpty() ||
+                positionInput.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Alle Felder müssen ausgefüllt sein!", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
         EmployeeForm.refreshMitarbeiterList();
         EmployeeForm.mitarbeiterList.stream()
                 .filter(mitarbeiter -> employeeID.equals(mitarbeiter.getId()))
@@ -149,13 +144,5 @@ public class UpdateEmployee {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Mitarbeiter wurde nicht gefunden", ButtonType.OK);
                     alert.showAndWait();
                 });
-    }
-
-    private void applyStylesheet(Scene scene) {
-        try {
-            scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        } catch (NullPointerException e) {
-            System.out.println("CSS-Datei konnte nicht geladen werden: " + e.getMessage());
-        }
     }
 }
