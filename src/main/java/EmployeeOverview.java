@@ -22,6 +22,7 @@ public class EmployeeOverview {
             gridPane.setHgap(10);
             gridPane.setVgap(5);
             gridPane.setAlignment(Pos.CENTER);
+            gridPane.setMaxWidth(400);
 
             gridPane.add(new Label("MitarbeiterID:"), 0, 0);
             TextField textField = new TextField(mitarbeiter.getId());

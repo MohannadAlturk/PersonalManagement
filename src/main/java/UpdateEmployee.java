@@ -60,6 +60,8 @@ public class UpdateEmployee {
         grid.setVgap(8);
         grid.setHgap(10);
         grid.setAlignment(Pos.CENTER);
+        grid.setMaxWidth(600);
+        grid.setMaxHeight(450);
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);

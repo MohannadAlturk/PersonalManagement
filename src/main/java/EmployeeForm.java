@@ -118,6 +118,8 @@ public class EmployeeForm {
                 positionInput.clear();
             }
         });
+        grid.setMaxWidth(800);
+        grid.setMaxHeight(400);
 
         mainLayout.setCenter(grid);
     }

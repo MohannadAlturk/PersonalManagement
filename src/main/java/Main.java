@@ -33,13 +33,14 @@ public class Main extends Application {
         Button updateEmployeeButton = new Button("Mitarbeiter ändern");
         Button deleteEmployeeButton = new Button("Mitarbeiter löschen");
         Button employeeOverviewButton = new Button("Mitarbeiter anzeigen");
+        Button SettingsButton = new Button("Mitarbeiter anzeigen");
         Button closeButton = new Button("Programm beenden");
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
         startLayout.getChildren().addAll(addEmployeeButton, employeeOverviewButton,
-                updateEmployeeButton, deleteEmployeeButton, spacer, closeButton);
+                updateEmployeeButton, deleteEmployeeButton, SettingsButton, spacer, closeButton);
 
         mainLayout.setLeft(startLayout);
 
@@ -60,22 +61,10 @@ public class Main extends Application {
         EmployeeOverview employeeOverview = new EmployeeOverview();
         UpdateEmployee updateEmployee = new UpdateEmployee();
 
-        addEmployeeButton.setOnAction(e -> showEmployeeForm(employeeForm));
-        deleteEmployeeButton.setOnAction(e -> showDeleteEmployeeForm(deleteEmployee));
-        employeeOverviewButton.setOnAction(e -> showEmployeeOverview(employeeOverview));
-        updateEmployeeButton.setOnAction(e -> showUpdateEmployeeForm(updateEmployee));
+        addEmployeeButton.setOnAction(e -> employeeForm.showEmployeeForm(mainLayout));
+        deleteEmployeeButton.setOnAction(e -> deleteEmployee.showDeleteEmployee(mainLayout));
+        employeeOverviewButton.setOnAction(e -> employeeOverview.showOverview(mainLayout));
+        updateEmployeeButton.setOnAction(e -> updateEmployee.showUpdateEmployee(mainLayout));
         closeButton.setOnAction(e -> primaryStage.close());
-    }
-    private void showEmployeeForm(EmployeeForm form) {
-        form.showEmployeeForm(mainLayout);
-    }
-    private void showDeleteEmployeeForm(DeleteEmployee deleteEmployee) {
-        deleteEmployee.showDeleteEmployee(mainLayout);
-    }
-    private void showEmployeeOverview(EmployeeOverview overview) {
-        overview.showOverview(mainLayout);
-    }
-    private void showUpdateEmployeeForm(UpdateEmployee updateEmployee) {
-        updateEmployee.showUpdateEmployee(mainLayout);
     }
 }
